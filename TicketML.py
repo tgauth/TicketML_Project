@@ -22,16 +22,26 @@ Morning=np.ndarray.tolist(pd.date_range("6:00", "12:00", freq="1min").time)
 Afternoon=np.ndarray.tolist(pd.date_range("12:01", "17:00", freq="1min").time)
 Evening=np.ndarray.tolist(pd.date_range("17:01", "21:00", freq="1min").time)
 Night=np.ndarray.tolist(pd.date_range("21:01", "5:00", freq="1min").time)
-Time=Data['Time Of Stop'].tolist()
+Time=pd.to_datetime(Data['Time Of Stop']).tolist()
 newTime=[]
+#for t in Time:
+#    if t in Morning:
+#        newTime.append('Morning')
+#    elif t in Afternoon:
+#        newTime.append('Afternoon')
+#    elif t in Evening:
+#        newTime.append('Evening')
+#    else:
+#        newTime.append('Night')
 for t in Time:
-    if t in Morning:
+    hour = t.hour
+    if hour >= 6 and hour <= 12:
         newTime.append('Morning')
-    elif t in Afternoon:
+    elif hour > 12 and hour <= 17:
         newTime.append('Afternoon')
-    elif t in Evening:
+    elif hour > 17 and hour <= 21:
         newTime.append('Evening')
-    else:
+    elif hour > 21 or hour < 6:
         newTime.append('Night')
         
 Data['Time Of Stop']=newTime
@@ -40,7 +50,7 @@ Data['Time Of Stop']=newTime
 # intended for features with a small number of options (i.e. yes or no)
 
 # show disparity among options
-featureList = ['SubAgency', 'Gender', 'Race']
+featureList = ['SubAgency', 'Gender', 'Race', 'Time Of Stop']
 
 # don't graph well as bar plot
 # featureList = ['Driver City', 'Driver State', 
