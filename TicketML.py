@@ -10,6 +10,7 @@ from collections import Counter
 import pandas as pd, numpy as np, datetime as dt
 import matplotlib.pyplot as plt
 import seaborn as sns
+import math
 
 
 Data=pd.read_csv('Traffic_Violations.csv')
@@ -46,11 +47,22 @@ for t in Time:
         
 Data['Time Of Stop']=newTime
 
+Year=(Data['Year']).tolist()
+newyear=[]
+
+for y in Year:
+    if math.isnan(y):
+        newyear.append(0)
+    elif y > 2019 or y < 1900:
+        newyear.append(0)
+    else:
+        newyear.append(y)
+
 # Feature Visualization 
 # intended for features with a small number of options (i.e. yes or no)
 
 # show disparity among options
-featureList = ['SubAgency', 'Gender', 'Race', 'Time Of Stop']
+featureList = ['SubAgency', 'Gender', 'Race', 'Time Of Stop','Color','Year']
 
 # don't graph well as bar plot
 # featureList = ['Driver City', 'Driver State', 
@@ -63,8 +75,6 @@ featureList = ['SubAgency', 'Gender', 'Race', 'Time Of Stop']
 
 # not graphed but possibly important
 # featureList = ['Location', 'Latitude', 'Longitude', 'Geolocation']
-# featureList = ['Vehicle Type', 'Year', 'Make', 'Model']
-
 
 for feature in featureList:
     count = Counter(Data[feature])
@@ -72,3 +82,15 @@ for feature in featureList:
     plt.xticks(range(len(count)), list(count.keys()))
     plt.title(feature)
     plt.savefig("{}.png".format(feature))
+
+
+
+#featureList_vehicle = ['VehicleType', 'Year', 'Make', 'Model'] #Seems to be very inconsistent with naming for Model and Make, year and color might be our best bets here
+# featureList_vehicle = ['Color','Year']
+
+
+# for feature in featureList_vehicle:
+#     count = Counter(Data[feature])
+#     plt.pie(list(count.values()),labels = list(count.keys()))
+#     plt.title(feature)
+#     plt.savefig("{}.png".format(feature))
