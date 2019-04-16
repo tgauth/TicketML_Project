@@ -52,11 +52,22 @@ newyear=[]
 
 for y in Year:
     if math.isnan(y):
-        newyear.append(0)
+        newyear.append('None')
     elif y > 2019 or y < 1900:
-        newyear.append(0)
+        newyear.append('None')
+    elif y > 2015:
+        newyear.append('New')
+    elif y > 2005 and y < 2015:
+        newyear.append('Modern')
+    elif y > 1980 and y < 2005:
+        newyear.append('Old')
+    elif y < 1980:
+        newyear.append('Classic')
     else:
-        newyear.append(y)
+        newyear.append('None')
+
+
+Data['Year']=newyear
 
 # Feature Visualization 
 # intended for features with a small number of options (i.e. yes or no)
@@ -78,6 +89,7 @@ featureList = ['SubAgency', 'Gender', 'Race', 'Time Of Stop','Color','Year']
 
 for feature in featureList:
     count = Counter(Data[feature])
+    print(count)
     plt.bar(range(len(count)), list(count.values()), align='center')
     plt.xticks(range(len(count)), list(count.keys()))
     plt.title(feature)
