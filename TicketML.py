@@ -7,8 +7,8 @@ Created on Tue Apr  9 21:35:35 2019
 """
 
 import pandas as pd, numpy as np, datetime as dt
-
-
+import random
+ 
 Data=pd.read_csv('Traffic_Tickets_Issued_Four_Year_Window.csv')
 
 #Convert Date to day of week Monday=0
@@ -31,6 +31,28 @@ for t in Time:
         newTime.append('Evening')
     else:
         newTime.append('Night')
-        
 Data['Time Of Stop']=newTime
     
+# Assign all current data as a positive sample
+
+numRows = Data.shape[0]
+Labels= [1] * numRows
+
+# Flesh out negative samples
+
+# Randomly Select a row and a column
+for i in range(numRows * 3):
+    randRow1 = random.randint(0, numRows - 1)
+    randRow2 = random.randint(0, numRows - 1)
+    randCol = random.randint(1, Data.shape[1] - 1) # First column seems to be an index, we don't want that
+    newSample = Data.iloc[randRow1,:]
+    newSample[randCol] = Data.iloc[randRow2,randCol]
+    Data.loc[Data.shape[0]] = newSample
+    Data.duplicated(keep='first')
+    if(Data.shape[0] != numRows):
+        Labels.append(0)
+        numRows = numRows + 1
+    else:
+        print("There is a repeat")
+Data['Label'] = Labels
+Data.to_csv("Traffic_Tickets_Issued_Four_Year_Window_With_Negatives.csv", sep='\t')
