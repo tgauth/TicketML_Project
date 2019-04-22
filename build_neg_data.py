@@ -8,12 +8,18 @@ Created on Tue Apr  9 21:35:35 2019
 
 from collections import Counter
 import pandas as pd, numpy as np, datetime as dt
+<<<<<<< HEAD:build_neg_data.py
+import random
+ 
+Data=pd.read_csv('Traffic_Tickets_Issued_Four_Year_Window.csv')
+=======
 import matplotlib.pyplot as plt
 import seaborn as sns
 import math
 
 
 Data=pd.read_csv('Traffic_Violations.csv')
+>>>>>>> master:TicketML.py
 
 # Convert Date to day of week Monday=0
 Data['Date Of Stop']=pd.to_datetime(Data['Date Of Stop']).dt.dayofweek
@@ -44,8 +50,33 @@ for t in Time:
         newTime.append('Evening')
     elif hour > 21 or hour < 6:
         newTime.append('Night')
-        
 Data['Time Of Stop']=newTime
+<<<<<<< HEAD:build_neg_data.py
+    
+# Assign all current data as a positive sample
+
+numRows = Data.shape[0]
+Labels= [1] * numRows
+
+# Flesh out negative samples
+
+# Randomly Select a row and a column
+for i in range(numRows * 3):
+    randRow1 = random.randint(0, numRows - 1)
+    randRow2 = random.randint(0, numRows - 1)
+    randCol = random.randint(1, Data.shape[1] - 1) # First column seems to be an index, we don't want that
+    newSample = Data.iloc[randRow1,:]
+    newSample[randCol] = Data.iloc[randRow2,randCol]
+    Data.loc[Data.shape[0]] = newSample
+    Data.duplicated(keep='first')
+    if(Data.shape[0] != numRows):
+        Labels.append(0)
+        numRows = numRows + 1
+    else:
+        print("There is a repeat")
+Data['Label'] = Labels
+Data.to_csv("Traffic_Tickets_Issued_Four_Year_Window_With_Negatives.csv", sep='\t')
+=======
 
 Year=(Data['Year']).tolist()
 newyear=[]
@@ -106,3 +137,4 @@ for feature in featureList:
 #     plt.pie(list(count.values()),labels = list(count.keys()))
 #     plt.title(feature)
 #     plt.savefig("{}.png".format(feature))
+>>>>>>> master:TicketML.py
