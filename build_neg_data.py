@@ -38,8 +38,8 @@ Data=Data.reset_index(drop=True)
 
 numRows = Data.shape[0]
 Labels= [1] * numRows
-#n_onelabels=len(Labels)   #Balance out labels
-#n_zerolabels=0
+n_onelabels=len(Labels)   #Balance out labels
+n_zerolabels=0
 
 # Flesh out negative samples
 
@@ -54,21 +54,23 @@ for i in range(numRows * 3):
     Data.duplicated(keep='first')
     if(Data.shape[0] != numRows):
         Labels.append(0)
-        #n_zerolabels+=1
+        n_zerolabels+=1
        
         numRows = numRows + 1
     else:
         print("There is a repeat")
+        
+    if  n_zerolabels==n_onelabels:   # Balance out labels
+        break
     
-     #if  n_zerolabels==n_onelabels:   Balance out labels
-       # break
 Data['Label'] = Labels
 
 geolocator = Nominatim(user_agent="Enter your email")
 Gas_Stations = geolocator.geocode("Gas Stations in Montgomery County Maryland ",exactly_one=False,timeout=10,limit=100)
 Data=Nearest_Gas_Station(Data,Gas_Stations)
 
-feature_columns = ['SubAgency', 
+feature_columns = ['Label'
+                   'SubAgency', 
                    'Gender', 
                    'Race',
                    'Date Of Stop',
