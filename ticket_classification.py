@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Apr 17 19:04:21 2019
- 
-@author: Tess
+
 """
  
 import pandas as pd
@@ -16,6 +15,8 @@ from sklearn.model_selection import train_test_split
 df = pd.read_csv("Traffic_Violations_withNegs.txt", sep='\t', engine='python')
 for col in df.columns: 
     print(col)  
+    
+# below is only if needed to further restrict features used 
 feature_columns = ['SubAgency', 'Gender', 'Race','Time Of Stop']
 test_df = df[feature_columns]
  

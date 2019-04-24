@@ -3,42 +3,16 @@
 """
 Created on Tue Apr 23 19:52:15 2019
 
-@author: Tess
 """
 
 from collections import Counter
-from geopy.geocoders import Nominatim
-from geopy.distance import geodesic
-
 import pandas as pd, numpy as np, datetime as dt
 import matplotlib.pyplot as plt
 import seaborn as sns
 import math
 import os
 
-def Nearest_Gas_Station(Data, Gas_Stations):
-    lat=Data['Latitude'].tolist()
-    long=Data['Longitude'].tolist()
-    new_Location=[]
-    for k in range(0, len(lat)):
-        street = (lat[k], long[k])
-        store_dist=[]
-        for j in Gas_Stations:
-            gas_st = (j.latitude, j.longitude)
-            store_dist.append(geodesic(street, gas_st).miles)
-        shortest= min(store_dist)
-        i = store_dist.index(shortest)
-        new_Location.append(Gas_Stations[i].address)
-    
-    Data['Location']=new_Location
-    return Data
-
 Data=pd.read_csv('Traffic_Violations.csv')
-
-##Select only data that has coordinates
-Data=Data.loc[pd.isnull(Data['Latitude'])==False]   
-Data=Data.reset_index(drop=True)
-#Data=Data.iloc[0:100,0:len(Data.columns)]
 
 # Convert Date to day of week Monday=0
 Data['Date Of Stop']=pd.to_datetime(Data['Date Of Stop']).dt.dayofweek
@@ -85,16 +59,18 @@ for y in Year:
 
 Data['Year']=newyear
 
-geolocator = Nominatim(user_agent="Enter your email")
-Gas_Stations = geolocator.geocode("Gas Stations in Montgomery County Maryland ",exactly_one=False,timeout=10,limit=100)
-Data=Nearest_Gas_Station(Data,Gas_Stations)
+data_columns = ['SubAgency', 
+                'Gender', 
+                'Race',
+                'Date Of Stop'
+                'Time Of Stop', 
+                'Location', 
+                'Year',
+                'Latitude',
+                'Longitude']
 
-""" To Do: 
-    - bucket distance from gas station (or restaurant, etc.) like time above
-    - only save features that will be used to csv """
-
+Data = Data[data_columns]
 Data.to_csv("Traffic_Violations_Features.csv")
-
 
 # Feature Visualization 
 # intended for features with a small number of options (i.e. yes or no)
