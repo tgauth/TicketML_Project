@@ -62,7 +62,7 @@ Data['Year']=newyear
 data_columns = ['SubAgency', 
                 'Gender', 
                 'Race',
-                'Date Of Stop'
+                'Date Of Stop',
                 'Time Of Stop', 
                 'Location', 
                 'Year',

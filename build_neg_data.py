@@ -71,7 +71,7 @@ Data=Nearest_Gas_Station(Data,Gas_Stations)
 feature_columns = ['SubAgency', 
                    'Gender', 
                    'Race',
-                   'Date Of Stop'
+                   'Date Of Stop',
                    'Time Of Stop', 
                    'Location', 
                    'Year']
