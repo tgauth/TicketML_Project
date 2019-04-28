@@ -32,7 +32,11 @@ def Nearest_Gas_Station(Data,Gas_Stations):
 Data=pd.read_csv('Traffic_Violations_Features.csv')
 Data=Data.loc[pd.isnull(Data['Latitude'])==False]   ##Select only data that has coordinates
 Data=Data.reset_index(drop=True)
-#Data=Data.iloc[0:100,0:len(Data.columns)]
+Data=Data.iloc[0:100000,0:len(Data.columns)]
+
+geolocator = Nominatim(user_agent="Enter your email")
+Gas_Stations = geolocator.geocode("Gas Stations in Montgomery County Maryland ",exactly_one=False,timeout=10,limit=100)
+Data=Nearest_Gas_Station(Data,Gas_Stations)
 
 # Assign all current data as a positive sample
 
@@ -45,6 +49,7 @@ n_zerolabels=0
 initial_rows = numRows*3
 # Randomly Select a row and a column
 while (n_zerolabels < n_onelabels):
+    print(n_zerolabels)
     randRow1 = random.randint(0, numRows - 1)
     randRow2 = random.randint(0, numRows - 1)
     randCol = random.randint(1, Data.shape[1] - 1) # First column seems to be an index, we don't want that
@@ -62,9 +67,9 @@ while (n_zerolabels < n_onelabels):
     
 Data['Label'] = Labels
 
-#geolocator = Nominatim(user_agent="Enter your email")
-#Gas_Stations = geolocator.geocode("Gas Stations in Montgomery County Maryland ",exactly_one=False,timeout=10,limit=100)
-#Data=Nearest_Gas_Station(Data,Gas_Stations)
+# geolocator = Nominatim(user_agent="Enter your email")
+# Gas_Stations = geolocator.geocode("Gas Stations in Montgomery County Maryland ",exactly_one=False,timeout=10,limit=100)
+# Data=Nearest_Gas_Station(Data,Gas_Stations)
 
 feature_columns = ['Label',
                    'SubAgency', 
