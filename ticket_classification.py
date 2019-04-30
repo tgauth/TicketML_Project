@@ -9,8 +9,11 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 
 # to be read in after negative sampling is complete
 test_df = pd.read_csv("Traffic_Violations_With_5_Times_Negatives.csv", sep='\t', engine='python')
@@ -35,6 +38,7 @@ y = test_df[['Label']]
 #X_train, X_test, y_train, y_test = train_test_split(df.drop('fatalCount', axis=1), df.fatalCount, test_size=0.33, random_state=42)
 # Need to drop "Ticket" column from dataframe and use as "Y"
 X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42) 
+
 """ Random Forest Regressor """
 m = RandomForestRegressor(n_estimators=50)
 m.fit(X_train, y_train.values.ravel())
@@ -49,4 +53,33 @@ clf = MultinomialNB()
 clf.fit(X_train, y_train.values.ravel())
 Y_pred = clf.predict(X_test)
 mse = mean_squared_error(y_test, Y_pred)
+print(mse)
+
+# https://towardsdatascience.com/pca-using-python-scikit-learn-e653f8989e60
+""" PCA """
+scaler = StandardScaler()
+# Fit on training set only.
+scaler.fit(X_train)
+# Apply transform to both the training set and the test set.
+X_train_pca = scaler.transform(X_train)
+X_test_pca = scaler.transform(X_test)
+pca = PCA(n_components=4)
+pca.fit(X_train_pca)
+X_train_pca = pca.transform(X_train_pca)
+X_test_pca = pca.transform(X_test_pca)
+
+""" Logistic Regression """
+logisticRegr = LogisticRegression()
+logisticRegr.fit(X_train_pca, y_train.values.ravel())
+y_pred_pca = logisticRegr.predict(X_test_pca)
+mse = mean_squared_error(y_test, y_pred_pca)
+print(mse)
+
+# https://scikit-learn.org/stable/auto_examples/classification/plot_classifier_comparison.html
+""" Decision Tree """
+clf = DecisionTreeClassifier(max_depth=4)
+clf.fit(X_train_pca, y_train)
+y_pred_pca = clf.predict(X_test_pca)
+score = clf.score(X_test_pca, y_test)
+mse = mean_squared_error(y_test, y_pred_pca)
 print(mse)
