@@ -11,6 +11,4 @@ The scripts are meant to be run in the following order:
 If you run into trouble executing a script, ensure that the libraries in the requirements.txt file are installed in your python environment. 
 If they are not, simply run pip install -r requirements.txt
 
-Traffic_Violations.csv is the original dataset
-Traffic_Violations_Features.csv is the result of running script #1
-Traffic_Violations_With_5_Times_Negatives.csv is the result of running scripts #2 & #3
+Traffic_Violations.csv is the original dataset, Traffic_Violations_Features.csv is the result of running script #1, Traffic_Violations_With_5_Times_Negatives.csv is the result of running scripts #2 & #3
